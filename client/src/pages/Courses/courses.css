@@ -1,0 +1,16 @@
+.SideMenuAndPageContent{
+    display: flex;
+    flex: 1;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background-color:rgba(0, 0, 0, 0.05)
+   }
+   .container-fluid{
+    background-color: white;
+    border-radius: 20px;
+    width: 92vw;
+   }
+
+   .container-fluid form{
+      border: 2px solid black;
+   }

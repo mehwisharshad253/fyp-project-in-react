@@ -1,0 +1,26 @@
+.addStaff{
+    flex: 4;
+    margin-top: 10px;
+    padding: 50px;
+}
+.addCoursesForm{
+    /* display: flex; */
+    /* flex-wrap: wrap; */
+}
+.addStaffItem{
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+}
+.addStaffItem>label{
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgb(151, 150, 150);
+}
+.addStaffItem>input{
+    height: 20px;
+    padding: 20px;
+    border: 1px solid gray;
+}

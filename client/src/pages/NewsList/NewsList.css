@@ -1,0 +1,64 @@
+.NewsList {
+    flex: 1;
+    overflow: auto; /* Add overflow property to enable scrolling if needed */
+  }
+  
+  .table-wrapper {
+    width: 100%;
+    overflow: auto; /* Add overflow property to enable scrolling if needed */
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center; /* Add align-items property to vertically center the actions */
+  }
+  
+  .actions svg {
+    cursor: pointer;
+  }
+  
+  .delete-btn {
+    color: red;
+  }
+  
+  /* Modal css */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .modal-wrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(189, 189, 189, 0.9);
+  }
+  
+  .modal-container {
+    position: fixed;
+    max-width: 30rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffff;
+    padding: 2rem 3rem;
+    border-radius: 0.5rem;
+  }
+  
+  /* Modal work css */
+  textarea {
+    width: 100%;
+  }
+  
+  .addNews label {
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgb(151, 150, 150);
+  }
+  
+  

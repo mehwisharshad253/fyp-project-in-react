@@ -1,0 +1,28 @@
+{error && <p>Error: {error}</p>}
+      <section className="coursesCard">
+        <div className="container grid2">
+          {courses.map((course, index) => (
+            <div className="items" key={index}>
+              <div className="content flex">
+                <div className="left">
+                  <div className="img">
+                    <img src={course.cover} alt="" />
+                  </div>
+                </div>
+                <div className="text">
+                  <h5 className="card-title">{course.courseName}</h5>
+                  <p className="card-text">Rating: {course.rating}</p>
+                  <p className="card-text">Lectures: {course.Lectures}</p>
+                </div>
+              </div>
+              <div className="price">
+                <p className="card-text">Price: {course.price}</p>
+              </div>
+              <button onClick={enrollNowClick} className="outline-btn">
+                ENROLL NOW!
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+      <LoginModal hideModal={() => setModalVisible(false)} modalVisible={modalVisible} />

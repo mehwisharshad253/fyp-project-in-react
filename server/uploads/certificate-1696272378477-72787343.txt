@@ -1,0 +1,391 @@
+sir problem yeh aari hai-
+1. name="data" name me woh value checked hone chahiye to api me hai v and new bhi app krege hum
+2. field array me voh value bhi hona chahiye joh value pehle b thi and new value bhi
+
+import { FormDate, FormInput, FormSelect } from "components/FormInputs";
+import { IMember } from "interface/IUser";
+import React, { Fragment, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Form,
+  reduxForm,
+  InjectedFormProps,
+  ConfigProps,
+  Field,
+  formValues,
+  initialize,
+  getFormValues,
+  FieldArray,
+} from "redux-form";
+
+import { userAction } from "store/actions/user";
+import { addStakholderRext, addTeamMemberRext } from "store/rext";
+import { addTeamMember, getlistStakeholder, getprojectDetails } from "store/selectors";
+import { getUserState } from "store/selectors/user";
+import URLRoutes from "urlRoutes";
+import { EnagagementType } from "utils/Option/Option";
+import { dateRequiredWithMessage } from "utils";
+import Dropdown from "components/Dropdown/Dropdown";
+import { useParams, useNavigate } from "react-router-dom";
+import usePrevious from "HOC/UsePrevious";
+import { toast } from "react-toastify";
+import CustomButton, { ICON_POSITION } from "components/CustomButton/CustomButton";
+import { CUSTOM_SVG_ICON, SVGType } from "components/SvgIcon";
+import ConfimationDeleteModal from "containers/ModalManager/ConfimationDeleteModal/ConfimationDeleteModal";
+
+const RenderFinanceFields = ({ setSelectTeam, fields }: any) => {
+  const [currentPage, setCurrentPage] = useState<any>(0);
+  const [startDatee, setStartDatee] = useState(new Date());
+  const { records } = useSelector(getUserState(currentPage));
+  const { data } = useSelector(getprojectDetails)
+  const dispatch = useDispatch();
+
+  const dropDownOptions: any[] = Object.values(records).map(
+    (item: any, index: number) => ({
+      label: item.firstName,
+      value: item.id,
+      email: item.email,
+      index,
+    })
+  );
+
+  useEffect(() => {
+    const selectedValues = data?.teamMembers || [];
+
+    const initialValues = {
+      data: selectedValues,
+      teamMembers: selectedValues.map((member: any) => ({
+        userId: member.userId,
+        label: member.teamMemberName,
+        paymentType: member.paymentType,
+        hours: member.hours,
+        amount: member.amount,
+        teamMemberStartDate: member.teamMemberStartDate,
+        teamMemberEndDate: member.teamMemberEndDate,
+      })),
+    };
+    console.log(initialValues, "tell")
+    dispatch(initialize('addTeamMember', initialValues));
+  }, [data?.teamMembers]);
+
+
+  return (
+    <Fragment>
+      <Field
+        name="data"
+        component={FormSelect}
+        showAppliedFilterIcon
+        popupPosition={"bottom center"}
+        options={dropDownOptions}
+        onChange={(e: any) => setSelectTeam(e)}
+        isMulti
+        isSearchable={true}
+        isLoading={false}
+        closeMenuOnSelect={false}
+        hideSelectedOptions={false}
+        className="border-1 border-radius-4px width-100 border-grey-shade-12 padding-3"
+        baseClassName=" padding-2 width-50"
+        preserve
+      />
+
+      <div className="width-100 flex flex-row padding-2 border-bottom">
+        <div className="width-25 padding-1 text-md text-bold text-heading-grey">
+          Member Name
+        </div>
+        <div className="width-20 padding-1 text-md text-bold text-heading-grey">
+          Engagement Type
+        </div>
+        <div className="width-10 padding-1 text-md text-bold text-heading-grey">
+          Hour
+        </div>
+        <div className="width-10 padding-1 text-md text-bold text-heading-grey">
+          $/hr
+        </div>
+        <div className="width-35 padding-1 text-md text-bold text-heading-grey flex flex-row">
+          <div className="width-50">Start Date</div>
+          <div className="width-50">End Date</div>
+        </div>
+      </div>
+      {fields.map((field: any, index: number) => {
+        return (
+          <div key={index} className="width-100">
+            <div className="flex flex-row">
+              <div className="width-100 flex flex-row padding-2 border-bottom">
+                <div className="width-25 flex flex-column">
+                  <div className="text-bold">{field.label}</div>
+                  <div className="text-word-break text-blue-shade-3 text-md ">
+                    {field.email}
+                  </div>
+                </div>
+
+                <Field
+                  name={`${field}.paymentType`}
+                  type="text"
+                  component={Dropdown}
+                  options={EnagagementType}
+                  className="border-1 border-radius-4px width-100 border-grey-shade-12 padding-2"
+                  baseClassName=" width-20 padding-l-1"
+                />
+                <Field
+                  name={`${field}.hours`}
+                  type="text"
+                  component={FormInput}
+                  className="border-1 border-radius-4px width-100 border-grey-shade-12 padding-3"
+                  baseClassName=" width-10 padding-l-1"
+                />
+                <Field
+                  name={`${field}.amount`}
+                  type="text"
+                  component={FormInput}
+                  className="border-1 border-radius-4px width-100 border-grey-shade-12 padding-3"
+                  baseClassName=" width-10 padding-l-1"
+                />
+                <div className="width-35 flex flex-row">
+                  <Field
+                    name={`${field}.teamMemberStartDate`}
+                    type="text"
+                    component={FormDate}
+                    className="border-1 border-radius-4px width-100 border-grey-shade-12 "
+                    baseClassName="  width-50 padding-l-1"
+                  />
+                  <Field
+                    name={`${field}.teamMemberEndDate`}
+                    type="text"
+                    component={FormDate}
+                    className="border-1 border-radius-4px width-100 border-grey-shade-12 "
+                    baseClassName="padding-l-1 width-50"
+                    required
+                    minDate={startDatee}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </Fragment>
+  );
+};
+
+
+
+function AddMemberForm(props: any) {
+  const { handleSubmit, onSubmit, reset, clearFields, handleFormSubmit } = props;
+  const [selectedOptions, setSelectedOptions] = useState<any>([]);
+  const [currentPage, setCurrentPage] = useState<any>(0);
+  const [startDate, setStartDate] = useState(new Date());
+  const [modalOpen, setModalOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const { projectId, companyId } = useParams()
+  const { fetching, error, message } = useSelector(addTeamMember)
+  const prevfetching = usePrevious(fetching);
+  const [selectedTeam, setSelectedTeam] = useState<any>([]);
+  const { data } = useSelector(getprojectDetails)
+  const { records } = useSelector(getUserState(currentPage));
+
+  //   let findMember: any = Object.values(records).filter((item: any) =>
+  //     selectedOptions.includes(item.id)
+  //   );
+  // console.log(data.teamMembers)
+
+  // const transformData = (teamMembers: any[]) => {
+  //   let transformed: any = [];
+
+  //   teamMembers?.forEach((item: any) => {
+  //     transformed.push({ ...item, label: item.teamMemberName, value: item.userId });
+  //   });
+  //   return transformed;
+  // }
+
+  // useEffect(() => {
+  //   dispatch({
+  //     type: '@@redux-form/CHANGE',
+  //     meta: {
+  //       form: 'addTeamMember',
+  //       field: 'data',
+  //       touch: false,
+  //       persistentSubmitErrors: false
+  //     },
+  //     payload: transformData(data?.teamMembers)
+  //   });
+
+  // }, [data?.teamMembers]);
+
+
+  // useEffect(() => {
+  //   if (data?.teamMembers) {
+  //     const teamMembersIds = data.teamMembers.map((item: any) => ({
+  //       userId: item.userId,
+  //       label: item.teamMemberName,
+  //       teamMemberStartDate: item.teamMemberStartDate,
+  //       teamMemberEndDate: item.teamMemberEndDate,
+  //       paymentType: item.paymentType,
+  //       hours: item.hours,
+  //       amount: item.amount,
+  //       email: item.email
+  //     }));
+  //     setSelectedTeam(teamMembersIds);
+  //   }
+  // }, [data.teamMembers]);
+
+  // useEffect(() => {
+  //   const initialValues = {
+  //     teamMembers: data?.teamMembers?.map((member: any) => ({
+  //       paymentType: member.paymentType,
+  //       hours: member.hours,
+  //       amount: member.amount,
+  //       teamMemberStartDate: member.teamMemberStartDate,
+  //       teamMemberEndDate: member.teamMemberEndDate,
+  //     })) || [],
+  //   };
+
+  //   console.log('initialValues:', initialValues);
+
+  //   dispatch(initialize('addTeamMember', initialValues));
+  // }, [data?.teamMembers]);
+  // useEffect(() => {
+
+  //   const initialValues = {
+  //     teamMembers: data?.teamMembers?.map((member: any) => ({
+  //       paymentType: member.paymentType,
+  //       hours: member.hours,
+  //       amount: member.amount,
+  //       teamMemberStartDate: member.teamMemberStartDate,
+  //       teamMemberEndDate: member.teamMemberEndDate,
+  //       // Add other fields as needed
+  //     })) || [], // Ensure it's an empty array if data.teamMembers is undefined or null
+  //   };
+
+  //   // Dispatch the initialize action with 'addTeamMember' as the form name
+  //   dispatch(initialize('addTeamMember', initialValues));
+  // }, [data?.teamMembers]);
+
+
+
+  // console.log(selectedTeam, "show");
+
+  // useEffect(() => {
+  //   dispatch(userAction.request(currentPage));
+  // }, [currentPage]);
+  // const route: any = [];
+  // const lot = Object.values(records).forEach((item: any) => {
+  //   return route.push(item.id);
+  // });
+
+  const formValues: any = useSelector(getFormValues('addTeamMember'));
+  console.log(formValues, 'show')
+  // const handleSubmitButton = (value: any) => {
+  //   let tush: any = [];
+  //   let x: any[] = [];
+  //   for (const key in value) {
+  //     if (route.includes(key)) {
+  //       tush.push(value[key]);
+  //       x.push(key);
+  //     }
+  //   }
+
+  //   const requestBody = {
+  //     teamMemberCreatePayloadList: tush.map((addressObj: any, index: number) => ({
+  //       userId: x[index],
+  //       paymentType: addressObj.paymentType.value,
+  //       amount: addressObj.amount,
+  //       hours: addressObj.hours,
+  //       teamMemberStartDate: addressObj.teamMemberStartDate,
+  //       teamMemberEndDate: addressObj.teamMemberEndDate,
+  //     }
+  //     )),
+  //     projectId: projectId || ""
+  //   };
+  //   dispatch(addTeamMemberRext.request({
+  //     url: URLRoutes.server.addTeamMember,
+  //     method: "post",
+  //     body: requestBody
+  //   }));
+  // };
+
+  // useEffect(() => {
+  //   if (!fetching && prevfetching) {
+  //     if (error) {
+  //       toast.error(message);
+  //       return;
+  //     }
+  //     toast.info(message);
+  //     props.reset()
+  //     navigate(`/sidebar/${companyId}/${projectId}`)
+  //   }
+  // }, [fetching, error, message])
+
+  // useEffect(() => {
+  //   setStartDate(formValues?.startDate);
+  // }, [formValues?.startDate])
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+  return (
+    <>
+      <div className="panel">
+        <div className="panel-wrap">
+          <Form onSubmit={handleSubmit(handleFormSubmit)} className="padding-8">
+            <div className="flex flex-column flex-wrap width-100">
+              <div className=" padding-5 flex flex-justify-between">
+                <div className="font-weight-header">Search Member</div>
+                <CustomButton
+                  handleClick={handleOpenModal}
+                  iconPosition={ICON_POSITION.LEFT}
+                  iconProps={{
+                    svgType: SVGType.CUSTOM,
+                    name: CUSTOM_SVG_ICON.Cross,
+                    size: "huge",
+                  }}
+                />
+
+                {modalOpen && (
+                  <ConfimationDeleteModal
+                    hideModal={handleCloseModal}
+                    onClose={handleCloseModal}
+                    onSave={() => navigate(`/sidebar/${companyId}/${projectId}`)}
+                    title="Confirmation"
+                    isIcon
+                    message="Are you sure you want to cancel the form ?"
+                    primaryBtnTitle="Yes"
+                    secondaryBtnTitle="No"
+                  />
+                )}
+              </div>
+              <FieldArray
+                name="teamMembers"
+                component={RenderFinanceFields}
+                fields={selectedTeam}
+                setSelectTeam={setSelectedTeam}
+              />
+            </div>
+            <div className="padding-t-4">
+              <button
+                onClick={() => navigate(`/sidebar/${companyId}/${projectId}`)}
+                className="back-button width-15 padding-3  margin-r-4"
+              >
+                Cancel
+              </button>
+              <button className="width-15 padding-3 button-color" type="submit">
+                Submit
+              </button>
+            </div>
+          </Form>
+        </div>
+      </div>
+    </>
+  );
+}
+
+const AddMember = reduxForm<{}, any>({
+  form: "addTeamMember",
+  enableReinitialize: true,
+})(AddMemberForm as any);
+
+export default AddMember;

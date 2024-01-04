@@ -1,0 +1,49 @@
+.addCourses{
+    flex: 4;
+    margin-top: 10px;
+    padding: 50px;
+}
+.addCoursesForm{
+    display: flex;
+    flex-wrap: wrap;
+}
+.addCoursesItem{
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+}
+.addCoursesItem>label{
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgb(151, 150, 150);
+}
+.addCoursesItem>input{
+    height: 20px;
+    padding: 20px;
+    border: 1px solid gray;
+}
+.rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .rating input {
+    display: none;
+  }
+  
+  .rating label {
+    font-size: 30px;
+    color: #ccc;
+    cursor: pointer;
+  }
+  
+  .rating label:before {
+    content: '\2605';
+  }
+  
+  .rating input:checked ~ label {
+    color: gold;
+  }

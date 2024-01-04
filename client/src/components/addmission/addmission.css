@@ -1,0 +1,84 @@
+ .admission-form {
+    max-width: 50%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  } 
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='date'],
+  input[type='file'] {
+    /* width: 100%; */
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content:center;
+    border: 1px solid rgb(211, 205, 205);
+  }
+  
+  button[type='submit'] {
+    font-size: 14px;
+    padding: 10px 15px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin:auto;
+    transition: background-color 0.2s ease;
+  }
+  
+  button[type='submit']:hover {
+    background-color: #3e8e41;
+  }
+  
+  .fmname{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  .fmnametwo ,.fmnamethree{
+    width: 50%;
+    margin-left: 5px;
+  }
+  .dcinput, .grinput,
+  .epinput, .odinput, .mminput,
+  .fcinput, .piinput,
+  .ipinput{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  .dcinputtwo, .dcinputthree,
+  .grinputtwo, .grinputthree,
+  .epinputtwo,.epinputthree,
+  .odinputtwo, .odinputthree,
+  .mminputtwo, .mminputthree,
+  .fcinputtwo, .fcinputthree,
+  .piinputtwo, .piinputthree,
+  .ipinputtwo, .ipinputthree{
+    width: 50%;
+    margin-left: 5px;
+  }
